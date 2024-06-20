@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map</title>
+    <!--leaflet css-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!--leaflet JS-->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!--CSS-->
+    <style>
+        body{
+            margin: 0;
+            padding: 0%;
+        }
+        #map{ 
+            margin-top: 2vh;
+            width: 100%;
+            height: 100vh;
+        }
+        #length {
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>   
+</head>
+<body>
+    <header id="length">Distance</header>
+    <div id="map"></div>
+    <!--JS for the map-->
+    <script>
+        //Map intialization
+        var map = L.map('map').setView([49.246292, -123.116226], 10);
+        
+        //Add tile layer
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        //Get current position
+        navigator.geolocation.watchPosition(currentPosition);
+        var marker;
+        function currentPosition(position){
+            var latitude = position.coords.latitude
+            var longitude = position.coords.longitude
+            
+            //Current position latitude longitude
+            var current = L.latLng(latitude, longitude);
+            //KPU Surrey latitude longitude
+            var end = L.latLng(49.13205, -122.87140);
+            
+            //Current position marker
+            if(!marker){
+                marker = L.marker(current).addTo(map);
+            }else{
+                marker.setLatLng(current);
+            }
+            
+            //KPU Surrey Library marker
+            var Lmarker = L.marker(end).addTo(map);
+
+            
+            //Calculate distance km
+            var distance = current.distanceTo(end) / 1000;
+
+            document.getElementById('length').innerHTML = 'Distance between: ' + distance.toFixed(2) + ' km';            
+        }
+    </script> 
+</body>
+</html>
